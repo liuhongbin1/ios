@@ -1,0 +1,66 @@
+<!--
+ * @Author: hongbin.liu
+ * @Date: 2023-03-29 10:05:14
+ * @LastEditors: hongbin.liu
+ * @LastEditTime: 2023-03-29 10:05:48
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载应用</title>
+</head>
+
+<body>
+    <script>
+        window.onload = function app() {
+            let userAgent = navigator.userAgent;
+            let Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+            let flag = true;
+            for (let i in Agents) {
+                if (userAgent.indexOf(Agents[i]) > -1) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                //这个是PC端
+                let cont = "<div class=\"item\">\n" +
+                    "            <p class=\"answer\">请使用手机系统自带的浏览器打开下载，并点击安装。<br/>\n" +
+                    "                <img src=\"assets/img/qr.png\" style=\"width: 200px;border: 0;margin: auto;\"/>\n" +
+                    "            </p>\n" +
+                    "        </div>";
+                $("#ios-cont").html(cont);
+                return true;
+            } else {
+                //这个是手机端
+                let isAndroid = userAgent.indexOf('Android') > -1 || userAgent.indexOf('Linux') > -1; //g
+                let isIOS = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+                if (isAndroid) {
+                    //这个是安卓操作系统
+                    window.open("https://cdn.renfei.net/app/renfei.apk");
+                } else if (isIOS) {
+                    //这个是ios操作系统
+                    //判断是不是在iPhone的Safair浏览器打开的本页面
+                    if (userAgent.indexOf('Safari') > -1) {
+                        //是 Safari
+                        window.open("itms-services://?action=download-manifest&url=https://cdn.renfei.net/app/renfei.plist");
+                    } else {
+                        //不是 Safari，继续处理，给予提示
+                        return true;
+                    }
+                } else {
+                    alert("暂不支持您的手机操作系统类型，只支持 iOS 或 Android。");
+                }
+            }
+            return false;
+        }
+    </script>
+</body>
+
+</html>
